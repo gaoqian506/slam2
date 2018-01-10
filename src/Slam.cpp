@@ -7559,8 +7559,9 @@ bool Slam::update_depth_lsd9() {
 	int offx[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
 	int offy[9] = { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
 
-	double dg, w1, w2, w, wsum, n[3], nt[3][2], x[3], g0, d0, d;
-	Vec3f pi, dpi;
+	double dg, w1, w2, w, wsum, n[3], nt[3][2], x[3], g0, d0, d, nik[3], dn[3];
+	double dndn, dnnt[2];
+	Vec3f pi, dpi, piik;
 	double a, b[3], xpi, xpit[3], maxw, id, l[3], wid, dtheta[3], itheta[3], it;
 
 	for (int i = 0; i < total; i++) {
@@ -7613,7 +7614,7 @@ bool Slam::update_depth_lsd9() {
 				wid = id < 0 ? -id : id;
 
 				w1 = (pw[ik]+0.0001);
-				w2 = wid*pw2[ik]*(1-w1);
+				w2 = wid*pw2[ik];//*(1-w1);
 				wsum = w1+w2;
 				d = (w1*pd[ik]+w2*pd2[ik])/(wsum);
 
@@ -7649,8 +7650,30 @@ bool Slam::update_depth_lsd9() {
 				b[1] += w*it*itheta[1];
 				b[2] += w*it*itheta[2];
 
-				a += w*(itheta[0]*itheta[0]+itheta[1]*itheta[1]+itheta[2]*itheta[2]);					
+				a += w*(itheta[0]*itheta[0]+itheta[1]*itheta[1]+itheta[2]*itheta[2]);
+
+
 				// }
+
+				piik = ppp[ik];
+				nik[0] = sin(piik.val[0])*cos(piik.val[1]);
+				nik[1] = sin(piik.val[0])*sin(piik.val[1]);
+				nik[2] = cos(piik.val[0]);
+
+				dn[0] = nik[0]-n[0];
+				dn[1] = nik[1]-n[1];
+				dn[2] = nik[2]-n[2];
+
+				dndn = dn[0]*dn[0]+dn[1]*dn[1]+dn[2]*dn[2];
+
+				dnnt[0] = dn[0]*nt[0][0]+dn[1]*nt[1][0]+dn[2]*nt[2][0];
+				dnnt[1] = dn[0]*nt[0][1]+dn[1]*nt[1][1]+dn[2]*nt[2][1];
+
+				b[0] -= w*dndn*dnnt[0];
+				b[1] -= w*dndn*dnnt[1];
+
+				a += w*(dnnt[0]*dnnt[0]+dnnt[1]*dnnt[1]);				
+
 
 				// pi = ppp[ik];
 
