@@ -7625,11 +7625,14 @@ bool Slam::update_depth_lsd9() {
 				xpit[1] = x[0]*nt[0][1]+x[1]*nt[1][1]+x[2]*nt[2][1];
 				xpit[2] = d/pi.val[2]/pi.val[2];
 
-				// b[0] += w*xpi*xpit[0];
-				// b[1] += w*xpi*xpit[1];
-				// b[2] += w*xpi*xpit[2];
+				b[0] += w*xpi*xpit[0];
+				b[1] += w*xpi*xpit[1];
+				b[2] += w*xpi*xpit[2];
 
-				// a += w*(xpit[0]*xpit[0]+xpit[1]*xpit[1]+xpit[2]*xpit[2]);
+				a += w*(xpit[0]*xpit[0]+xpit[1]*xpit[1]+xpit[2]*xpit[2]);
+
+				w = exp(-dg*dg*400)*w1;
+				//w = 1;
 
 				dtheta[0] = pi.val[2]*xpit[0];
 				dtheta[1] = pi.val[2]*xpit[1];
@@ -7641,11 +7644,45 @@ bool Slam::update_depth_lsd9() {
 				itheta[1] = id*dtheta[1];
 				itheta[2] = id*dtheta[2];
 
-				b[0] += w1*it*itheta[0];
-				b[1] += w1*it*itheta[1];
-				b[2] += w1*it*itheta[2];
+				// if (u2 == u && v2 == v) {
+				b[0] += w*it*itheta[0];
+				b[1] += w*it*itheta[1];
+				b[2] += w*it*itheta[2];
 
-				a += w1*(itheta[0]*itheta[0]+itheta[1]*itheta[1]+itheta[2]*itheta[2]);
+				a += w*(itheta[0]*itheta[0]+itheta[1]*itheta[1]+itheta[2]*itheta[2]);					
+				// }
+
+				// pi = ppp[ik];
+
+				// n[0] = sin(pi[0])*cos(pi[1]);
+				// n[1] = sin(pi[0])*sin(pi[1]);
+				// n[2] = cos(pi[0]);
+
+				// double npi[6];
+				// npi[0] = cos(pi[0])*cos(pi[1]);
+				// npi[1] = cos(pi[0])*sin(pi[1]);
+				// npi[2] = -sin(pi[0]);
+				// npi[3] = -sin(pi[0])*sin(pi[1]);
+				// npi[4] = sin(pi[0])*cos(pi[1]);
+				// npi[5] = 0;
+
+				// id = l[0]*t[0]+l[1]*t[1]+l[2]*t[2];
+				// double dpi2[3];
+				// dpi2[0] = pi[2]*(x[0]*npi[0]+x[1]*npi[1]+x[2]*npi[2]);
+				// dpi2[1] = pi[2]*(x[0]*npi[3]+x[1]*npi[4]+x[2]*npi[5]);
+				// dpi2[2] = x[0]*n[0]+x[1]*n[1]+x[2]*n[2];
+
+				// double ipi[3];
+				// ipi[0] = id*dpi2[0];
+				// ipi[1] = id*dpi2[1];
+				// ipi[2] = id*dpi2[2];
+
+				// dg = pit[ik]*f1;
+				// b[0] += dg*ipi[0];
+				// b[1] += dg*ipi[1];
+				// b[2] += dg*ipi[2];
+				// a += ipi[0]*ipi[0]+ipi[1]*ipi[1]+ipi[2]*ipi[2];				
+
 
 
 
@@ -7659,9 +7696,9 @@ bool Slam::update_depth_lsd9() {
 			}
 		}
 
-		dpi.val[0] = -b[0]/a;
-		dpi.val[1] = -b[1]/a;
-		dpi.val[2] = -b[2]/a;
+		dpi.val[0] = -b[0]/(a+0.0001);
+		dpi.val[1] = -b[1]/(a+0.0001);
+		dpi.val[2] = -b[2]/(a+0.0001);
 
 		pdpp[i] = dpi;
 		//pdw[i] = maxw;
