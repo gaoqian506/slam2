@@ -36,6 +36,9 @@ gongyuan:
 	
 dajiang:
 	./$(TARGET) data/videos/dajiang0229.mp4
+
+coast:
+	./$(TARGET) -config conf/coast.conf
 	
 m1_left_8x8:
 	./$(TARGET) data/images/move_left_8x8_001.png data/images/move_left_8x8_002.png

@@ -47,6 +47,11 @@ Slam::Slam(VideoSource* vs) : m_working(false), m_camera_count(0), m_key(NULL), 
 	m_res[1] = 1;
 	m_interval = 0;
 
+
+
+	// m_source->crop();
+	//image->warp(warped);
+
 	
 }
 
@@ -60,6 +65,7 @@ void Slam::start() {
 	//for(int i = 0; i < 10; i++) {
 	//	push();
 	//}
+
 	
 	Image* image = NULL;
 	Image* resized = NULL;
@@ -7119,6 +7125,7 @@ void Slam::build_lsd9(BuildFlag flag) {
 
 	Image* image = NULL;
 	Image* resized = NULL;
+	Image* cropped = NULL;
 	int times = 0;
 	int steps = 0;
 	bool ok;
@@ -7126,8 +7133,9 @@ void Slam::build_lsd9(BuildFlag flag) {
 		if ((flag & BuildReadFrame)) {
 			if (m_source->read(image)) {
 				image->resize(resized);
-				initialize(resized);
-				preprocess(resized);
+				resized->crop(cropped);
+				initialize(cropped);
+				preprocess(cropped);
 			}
 			else { break; }
 		}
@@ -7182,7 +7190,8 @@ void Slam::build_lsd9(BuildFlag flag) {
 		}
 	}
 	if (image) { delete image; }
-	if (resized) { delete resized; }	
+	if (resized) { delete resized; }
+	if (cropped) { delete cropped; }
 }
 void Slam::prepare_dr_lsd9() {
 

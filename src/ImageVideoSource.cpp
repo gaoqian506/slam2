@@ -7,6 +7,8 @@ namespace ww {
 
 ImageVideoSource::ImageVideoSource(char** names, const int count) : m_looply(true) {
 
+	assert(0);
+
 	for (int i = 0; i < count; i++) {
 		m_images.push_back(cv::imread(names[i]));
 	}
@@ -14,7 +16,13 @@ ImageVideoSource::ImageVideoSource(char** names, const int count) : m_looply(tru
 	
 }
 
+ImageVideoSource::ImageVideoSource(std::vector<std::string> names) {
+
+}
+
 bool ImageVideoSource::read(Image*& image) {
+
+	assert(0);
 
 	if (m_cursor == m_images.end()) {
 	

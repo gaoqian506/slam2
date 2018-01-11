@@ -2,6 +2,7 @@
 
 #include "FilmVideoSource.h"
 #include "CvImage.h"
+#include "Config.h"
 
 namespace ww {
 
@@ -10,6 +11,11 @@ FilmVideoSource::FilmVideoSource(const char* path) {
 
 	m_capture.open(path);
 	assert(m_capture.isOpened());
+
+	for (int i = 0; i < Config::num_skip_frames; i++) {
+		m_capture.grab();
+	}
+	//m_source->skip(Config::num_skip_frames);
 	
 	//cv::namedWindow("video", CV_WINDOW_NORMAL);
 

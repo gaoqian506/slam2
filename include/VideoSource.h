@@ -14,6 +14,7 @@ class VideoSource {
 
 public:
 	virtual bool read(Image*& image) = 0;
+	virtual void skip(int num_frames) = 0;
 
 };
 

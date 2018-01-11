@@ -15,8 +15,10 @@ class ImageVideoSource : public VideoSource {
 
 public:
 	ImageVideoSource(char** names, const int count);
+	ImageVideoSource(std::vector<std::string> names);
 
 	virtual bool read(Image*& image);
+	virtual void skip(int num_frames) {}
 
 private:
 	std::vector<cv::Mat> m_images;

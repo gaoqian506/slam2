@@ -225,6 +225,28 @@ int CvImage::count_nozero() {
 	
 	return cv::countNonZero(m_cv_mat);
 }
+
+void CvImage::crop(Image*& out) {
+
+	if (out == NULL) {
+		out = new CvImage();
+	}
+	CvImage* cv_out = static_cast<CvImage*>(out);
+	
+	int w = m_cv_mat.cols;
+	int h = m_cv_mat.rows;
+
+	int nw = w * Config::crop_percent[0];
+	int nh = h * Config::crop_percent[1];
+	int left = (w - nw) >> 1;
+	int top = (h - nh) >> 1;
+
+	cv::Rect roi(left, top, nw, nh);
+	m_cv_mat(roi).copyTo(cv_out->m_cv_mat);
+	//cv_out->m_cv_mat = m_cv_mat(roi);
+	roi = cv::Rect();
+	
+}
 //float CvImage::sample(const float& a, const float& b) {
 
 	//assert(m_cv_mat.type() == CV_32F);

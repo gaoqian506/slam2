@@ -2,6 +2,8 @@
 #define __WW_CONFIG_HEADER__
 
 #include "Vectors.h"
+#include <string>
+#include <vector>
 
 namespace ww {
 
@@ -81,6 +83,10 @@ public:
 
 	};
 
+	enum SourceType { Video, Image };
+
+	static void load(const char* config_file);
+
 	static int max_width;
 	static bool manually_content;
 	//static bool epipolar_mode;
@@ -133,6 +139,13 @@ public:
 	static double min_gradient_length2;
 	static Vec3f default_depth_plane;
 	static double default_depth_weight;
+
+	static int num_skip_frames;
+	static double crop_percent[2];
+	static SourceType source_type;
+	static std::string video_file;
+	static std::vector<std::string> image_files;
+
 
 
 };

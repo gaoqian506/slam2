@@ -1,5 +1,9 @@
 #include "Config.h"
 
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+
 namespace ww {
 
 
@@ -59,4 +63,95 @@ namespace ww {
 	double Config::min_gradient_length2 = 0.005;
 	Vec3f Config::default_depth_plane = Vec3f(0, 0, 0.1);
 	double Config::default_depth_weight = 0.001;
+
+	int Config::num_skip_frames = 0;
+	double Config::crop_percent[2] = {1, 1};
+	Config::SourceType Config::source_type = Config::Video;
+	std::string Config::video_file;
+	std::vector<std::string> Config::image_files;
+
+
+	void Config::load(const char* config_file) {
+
+		FILE * fp;
+		// char * line = NULL;
+		// char* start = 0;
+		// size_t len = 0;
+		// ssize_t read;
+
+		fp = fopen(config_file, "r");
+		if (fp == NULL) {
+			std::cout << "Faild to load config file:" << config_file << std::endl;
+		}
+
+		char buffer[1024];
+		char *first, *colon, *second, *last;
+		while(fgets(buffer, 1024, fp)) {
+			
+			std::cout << buffer;
+
+
+
+			if (colon = strchr(buffer, ':')) {
+
+				first = buffer;
+				last = buffer + strlen(buffer);
+				second = colon+1;
+				colon[0] = 0;
+
+				while(last[0] == ' ' || last[0] == '\t' || last[0] == '\n' || last[0] == 0) {
+					last[0] = 0;
+					last--;
+				}
+				while(colon[0] == ' ' || colon[0] == '\t' || colon[0] == '\n' || colon[0] == 0) {
+					colon[0] = 0;
+					colon--;
+				}
+
+				while(first[0] == ' ' || first[0] == '\t' ) {
+					first++;
+				}
+				while(second[0] == ' ' || second[0] == '\t' ) {
+					second++;
+				}
+
+
+				if (first[0] == '#') { continue; }
+
+				if (strcmp(first, "skips") == 0) {
+					Config::num_skip_frames = atoi(second);
+				}
+				else if (strcmp(first, "crop_h") == 0) {
+					Config::crop_percent[0] = atof(second);
+				}
+				else if (strcmp(first, "crop_v") == 0) {
+					Config::crop_percent[1] = atof(second);
+				}
+				else if (strcmp(first, "video") == 0) {
+					Config::source_type = Video;
+					Config::video_file = second;
+				}	
+				else if (strcmp(first, "max_width") == 0) {
+					Config::max_width = atoi(second);
+				}
+
+
+			}
+
+		}
+
+		// while ((read = getline(&line, &len, fp)) != -1) {
+
+		// 	//for (int i = 0; i < )
+
+
+
+		// //     printf("Retrieved line of length %zu :\n", read);
+		// //     printf("%s", line);
+		// }
+
+		if (fp) { fclose(fp); }
+		//if (line) { free(line); }
+
+	}
 }

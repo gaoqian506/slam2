@@ -17,6 +17,7 @@ public:
 	FilmVideoSource(const char* path);
 
 	virtual bool read(Image*& image);
+	virtual void skip(int num_frames) {}
 
 private:
 	cv::VideoCapture m_capture;
