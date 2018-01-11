@@ -26,7 +26,7 @@ longxuan:
 	./$(TARGET) data/videos/longxuan.mp4
 	
 texie:
-	./$(TARGET) data/videos/texie.mp4
+	./$(TARGET) -config conf/texie.conf
 
 shanghai:
 	./$(TARGET) data/videos/shanghai.mp4
@@ -39,6 +39,21 @@ dajiang:
 
 coast:
 	./$(TARGET) -config conf/coast.conf
+
+farm:
+	./$(TARGET) -config conf/farm.conf
+
+sunrise:
+	./$(TARGET) -config conf/sunrise.conf
+
+mountain:
+	./$(TARGET) -config conf/mountain.conf
+
+mountain2:
+	./$(TARGET) -config conf/mountain2.conf
+
+snow_mountain:
+	./$(TARGET) -config conf/snow_mountain.conf
 	
 m1_left_8x8:
 	./$(TARGET) data/images/move_left_8x8_001.png data/images/move_left_8x8_002.png

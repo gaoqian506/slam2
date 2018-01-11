@@ -138,9 +138,6 @@ void View::display() {
 		break;
 	case DisplayImage:
 
-		glColor3d(0.35, 0.92, 0.72);
-		print_text(m_content->pixel_info(m_pixel_pos, m_key_index), 5, 15);
-			
 		glColor3d(0.72, 0.38, 0.49);
 		m_image = m_content->get_debug_image(
 			m_display_index, m_key_index, &m_weight);
@@ -151,6 +148,8 @@ void View::display() {
 			draw_image(m_image); 
 		}
 		
+		glColor3d(0.35, 0.92, 0.72);
+		print_text(m_content->pixel_info(m_pixel_pos, m_key_index), 5, 15);
 		//glColor3d(0.92, 0.56, 0.37);
 		//draw_optical_flow(m_content->get_optical_flow());
 
@@ -278,10 +277,10 @@ void View::special(int key,int x,int y) {
 		//m_content->func_manualy(1);
 		m_content->build((ViewContent::BuildFlag)(
 			//ViewContent::BuildReadFrame + 
-			ViewContent::BuildOpticalFlow
+			ViewContent::BuildOpticalFlow 
 			//ViewContent::BuildEpipolar +
 			//ViewContent::BuildKeyframe +
-			//ViewContent::BuildIterate
+			+ ViewContent::BuildIterate
 		));	
 		display();
 		//glutPostRedisplay();

@@ -51,7 +51,7 @@ namespace ww {
 
 	bool Config::smooth_input_image = true;
 	int Config::build_steps = 5;
-	int Config::build_iterations = 50;
+	int Config::build_iterations = 100;
 	double Config::mask_radio_thresh = 0.8;
 	bool Config::use_i1_constraint = false;
 	double Config::default_depth = 0.1;
@@ -62,7 +62,7 @@ namespace ww {
 	bool Config::image_switch_list[128] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  };
 	double Config::min_gradient_length2 = 0.005;
 	Vec3f Config::default_depth_plane = Vec3f(0, 0, 0.1);
-	double Config::default_depth_weight = 0.001;
+	double Config::default_depth_weight = 0.1;
 
 	int Config::num_skip_frames = 0;
 	double Config::crop_percent[2] = {1, 1};

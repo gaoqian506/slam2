@@ -7143,10 +7143,9 @@ void Slam::build_lsd9(BuildFlag flag) {
 		while(flag & BuildOpticalFlow) {
 			prepare_dr_lsd9();
 			ok = calc_dr_lsd9();
-			//->add(m_dut);
-			if (!(flag & BuildIterate) || ok || 
-				times >= Config::build_iterations
-			) { break; }
+			if (!(flag & BuildIterate) || ok || times >= Config::build_iterations) {
+				break; 
+			}
 			times++;
 		}
 
@@ -7412,7 +7411,7 @@ bool Slam::calc_dr_lsd9() {
 			iu[1] += pwiu1[i][1];
 		}
 
-		w = pw[i]*pdw[i];
+		w = pw[i];//*pdw[i];
 		//w =1 ;
 
 		x[0] = f1 * u;
@@ -7458,7 +7457,7 @@ bool Slam::calc_dr_lsd9() {
 		// 	if (ww[1] < 0){ ww[1] = 0; }
 		// }
 		// w2 = ww[0]>ww[1] ? ww[0] : ww[1];
-		w2 = 1 - pw[i];
+		w2 = 1 - w;
 
 		pdd[i] = w2;
 
@@ -7519,18 +7518,26 @@ bool Slam::calc_dr_lsd9() {
 	cv::Mat cvB = cv::Mat(9, 1, CV_64F, B);
 	cv::Mat cvr = cvA.inv()*cvB;
 
-	Vec3d dt(cvr.ptr<double>());
-	Vec3d da(cvr.ptr<double>()+3);
+	double* r = cvr.ptr<double>();	
+
+	Vec3d dt(r);
+	Vec3d da(r+3);
 	m_frame->pos += dt;
 	MatrixToolbox::update_rotation(m_frame->rotation, da);
 
-	m_key->plane[0] += cvr.ptr<double>()[6];
-	m_key->plane[1] += cvr.ptr<double>()[7];
-	m_key->plane[2] += cvr.ptr<double>()[8];
+	m_key->plane[0] += r[6];
+	m_key->plane[1] += r[7];
+	m_key->plane[2] += r[8];
 
 	m_frame->rotation_warp(m_warp);
 
-	return false;	
+	double change = 0;
+	for (int i = 0; i < 9; i++) {
+		change += r[i]*r[i];
+	}
+
+	return change < 0.000001;
+	
 }
 bool Slam::update_depth_lsd9() {
 
